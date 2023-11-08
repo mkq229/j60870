@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.openmuc.j60870.UtilTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-11-07T01:19:29" hostname="DESKTOP-A2KKD3J" time="0.005">
+  <properties/>
+  <testcase name="test111" classname="org.openmuc.j60870.UtilTest" time="0.005"/>
+  <system-out><![CDATA[[Lorg.openmuc.j60870.ie.InformationElement;@482bd1dc
+[Lorg.openmuc.j60870.ie.InformationElement;@6fe7e06b
+[Lorg.openmuc.j60870.ie.InformationElement;@a6c4e18
+[Lorg.openmuc.j60870.ie.InformationElement;@1cdfdbb8
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

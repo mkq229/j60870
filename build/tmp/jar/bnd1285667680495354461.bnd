@@ -1,0 +1,10 @@
+Import-Package=javax.net,org.openmuc.j60870,org.openmuc.j60870.ie,org.openmuc.j60870.internal
+Bundle-Name=j60870
+Export-Package=org.openmuc.j60870;uses\:\="javax.net,org.openmuc.j60870.ie",org.openmuc.j60870.ie;uses\:\="org.openmuc.j60870,org.openmuc.j60870.internal",org.openmuc.j60870.internal
+Created-By=1.8.0_181 (Oracle Corporation)
+Bundle-Version=1.6.2
+Bundle-ManifestVersion=2
+Bnd-LastModified=1698918225173
+Require-Capability=osgi.ee;filter\:\="(&(osgi.ee\=JavaSE)(version\=1.8))"
+Tool=Bnd-3.4.0.201707252008
+Bundle-SymbolicName=org.openmuc.j60870
