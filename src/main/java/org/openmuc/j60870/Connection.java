@@ -686,7 +686,7 @@ public class Connection implements AutoCloseable {
         os.write(buffer, 0, length);
         os.flush();
         resetMaxIdleTimeTimer();
-        // 返回发送的报文信息
+        // return send msg info
         return HexUtils.bytesToHex2(buffer, length);
     }
 
