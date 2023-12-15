@@ -34,6 +34,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 /**
  * Represents an open connection to a specific 60870 server. It is created either through an instance of
@@ -51,6 +52,9 @@ import java.util.concurrent.TimeUnit;
  * </p>
  */
 public class Connection implements AutoCloseable {
+
+    private static final Logger log = Logger.getLogger(org.openmuc.j60870.Connection.class.getName());
+
     private static final byte[] TESTFR_CON_BUFFER = new byte[]{0x68, 0x04, (byte) 0x83, 0x00, 0x00, 0x00};
     private static final byte[] TESTFR_ACT_BUFFER = new byte[]{0x68, 0x04, (byte) 0x43, 0x00, 0x00, 0x00};
     private static final byte[] STARTDT_ACT_BUFFER = new byte[]{0x68, 0x04, 0x07, 0x00, 0x00, 0x00};
@@ -202,6 +206,9 @@ public class Connection implements AutoCloseable {
             try {
                 while (true) {
                     final APdu aPdu = APdu.decode(socket, settings);
+                    byte[] buffer = new byte[255];
+                    int length = aPdu.encode(buffer, settings);
+                    log.info("Rx:" + HexUtils.bytesToHex2(buffer, length));
                     synchronized (Connection.this) {
 
                         switch (aPdu.getApciType()) {
@@ -327,11 +334,12 @@ public class Connection implements AutoCloseable {
 
             if (aSduListener == null) {
                 aSduListener = aSduListenerBack;
+            } else {
+                aSduListener.newEndMsg(HexUtils.bytesToHex2(STARTDT_CON_BUFFER, STARTDT_CON_BUFFER.length));
             }
             setStopped(false);
         }
         os.flush();
-
         resetMaxIdleTimeTimer();
     }
 
@@ -528,7 +536,7 @@ public class Connection implements AutoCloseable {
             os.write(STARTDT_ACT_BUFFER);
         }
         os.flush();
-
+        log.info("Tx:" + HexUtils.bytesToHex2(STARTDT_ACT_BUFFER, STARTDT_ACT_BUFFER.length));
         boolean success;
         try {
             success = startDtConSignal.await(settings.getMaxTimeNoAckReceived(), TimeUnit.MILLISECONDS);
@@ -706,8 +714,8 @@ public class Connection implements AutoCloseable {
      * @param aSdu ASDU which response to
      * @throws IOException if a fatal communication error occurred.
      */
-    public void sendConfirmation(ASdu aSdu) throws IOException {
-        sendConfirmation(aSdu, aSdu.getCommonAddress(), false);
+    public String sendConfirmation(ASdu aSdu) throws IOException {
+        return sendConfirmation(aSdu, aSdu.getCommonAddress(), false);
     }
 
     /**
@@ -731,9 +739,9 @@ public class Connection implements AutoCloseable {
      * @param isNegativeConfirm true if it is a negative confirmation
      * @throws IOException if a fatal communication error occurred.
      */
-    public void sendConfirmation(ASdu aSdu, int stationAddress, boolean isNegativeConfirm) throws IOException {
+    public String sendConfirmation(ASdu aSdu, int stationAddress, boolean isNegativeConfirm) throws IOException {
         CauseOfTransmission cot = cotFrom(aSdu);
-        sendActDect(aSdu, stationAddress, cot, isNegativeConfirm);
+        return sendActDect(aSdu, stationAddress, cot, isNegativeConfirm);
     }
 
     /**
@@ -775,13 +783,13 @@ public class Connection implements AutoCloseable {
         sendActivationTermination(aSdu, aSdu.getCommonAddress());
     }
 
-    private void sendActDect(ASdu aSdu, int stationAddress, CauseOfTransmission cot, boolean isNegativeConfirm)
+    private String sendActDect(ASdu aSdu, int stationAddress, CauseOfTransmission cot, boolean isNegativeConfirm)
             throws IOException {
         int commonAddress = aSdu.getCommonAddress();
 
         commonAddress = setCommonAddress(stationAddress, commonAddress);
 
-        send(new ASdu(aSdu.getTypeIdentification(), aSdu.isSequenceOfElements(), cot, aSdu.isTestFrame(),
+        return send(new ASdu(aSdu.getTypeIdentification(), aSdu.isSequenceOfElements(), cot, aSdu.isTestFrame(),
                 isNegativeConfirm, aSdu.getOriginatorAddress(), commonAddress, aSdu.getInformationObjects()));
     }
 

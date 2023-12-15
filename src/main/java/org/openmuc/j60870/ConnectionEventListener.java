@@ -57,4 +57,6 @@ public interface ConnectionEventListener extends EventListener {
      */
     void dataTransferStateChanged(boolean stopped);
 
+    void newEndMsg(String aPdu);
+
 }

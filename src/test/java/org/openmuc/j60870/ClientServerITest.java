@@ -502,6 +502,11 @@ public class ClientServerITest {
             }
         }
 
+        @Override
+        public void newEndMsg(String aPdu) {
+
+        }
+
     }
 
     private class ServerReceiverMultiThread implements ConnectionEventListener {
@@ -558,6 +563,11 @@ public class ClientServerITest {
 
         @Override
         public void dataTransferStateChanged(boolean stopped) {
+        }
+
+        @Override
+        public void newEndMsg(String aPdu) {
+
         }
 
     }
@@ -623,6 +633,11 @@ public class ClientServerITest {
 
         @Override
         public void dataTransferStateChanged(boolean stopped) {
+        }
+
+        @Override
+        public void newEndMsg(String aPdu) {
+
         }
 
     }
@@ -937,6 +952,11 @@ public class ClientServerITest {
             else {
                 CDTSC_stopped.incrementAndGet();
             }
+        }
+
+        @Override
+        public void newEndMsg(String aPdu) {
+
         }
 
     }

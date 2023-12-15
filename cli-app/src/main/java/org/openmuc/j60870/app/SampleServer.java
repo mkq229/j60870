@@ -162,6 +162,11 @@ public class SampleServer {
                 log("Data transfer of connection (" + connectionId + ") was ", dtState, ".");
             }
 
+            @Override
+            public void newEndMsg(String aPdu) {
+
+            }
+
         }
 
         @Override

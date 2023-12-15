@@ -110,6 +110,11 @@ public final class ConsoleClient {
             log("Data transfer was ", dtState);
         }
 
+        @Override
+        public void newEndMsg(String aPdu) {
+
+        }
+
     }
 
     private static class ActionExecutor implements ActionListener {
